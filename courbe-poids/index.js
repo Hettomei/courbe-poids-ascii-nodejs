@@ -1,6 +1,6 @@
-const https = require("https");
+const https = require('https');
 
-const url = process.argv.slice(-1)[0]
+const url = process.argv.slice(-1)[0];
 
 function drawGraph(data) {
   const VISUAL_POINT = '+';
@@ -12,28 +12,28 @@ function drawGraph(data) {
   const visualMax = Math.round(maxValue) + 2;
   const visualMin = Math.round(minValue) - 5;
 
-  let graphic = [];
+  const graphic = [];
 
-  graphic.push('┌' + ''.padStart(data.length + 6, '─') + '┐');
+  graphic.push(`┌${''.padStart(data.length + 6, '─')}┐`);
 
   for (let i = visualMax; i > visualMin; i--) {
     let line = '';
 
-    line += i + '  ';
-    data.forEach(d => {
+    line += `${i}  `;
+    data.forEach((d) => {
       line += i === Math.floor(d) ? VISUAL_POINT : EMPTY_POINT;
-    })
-    line += '  ' + i;
+    });
+    line += `  ${i}`;
 
     graphic.push(line);
   }
 
-  graphic.push('└' + ''.padStart(data.length + 6, '─') + '┘');
+  graphic.push(`└${''.padStart(data.length + 6, '─')}┘`);
 
   console.log(graphic.join('\n'));
 
-  console.log("max :", maxValue);
-  console.log("min :", minValue);
+  console.log('max :', maxValue);
+  console.log('min :', minValue);
 }
 
 function play(obj) {
@@ -43,23 +43,22 @@ function play(obj) {
       date: new Date(l.date),
       poids: +l.price,
     }))
-    .sort((a,b) => a.date - b.date);
+    .sort((a, b) => a.date - b.date);
 
   console.log();
   drawGraph(basicArray.map(c => c.poids));
 }
 
-https.get(url, res => {
-  res.setEncoding("utf8");
+https.get(url, (res) => {
+  res.setEncoding('utf8');
 
-  let body = "";
+  let body = '';
 
-  res.on("data", data => {
+  res.on('data', (data) => {
     body += data;
   });
 
-  res.on("end", () => {
+  res.on('end', () => {
     play(JSON.parse(body));
   });
-
 });
