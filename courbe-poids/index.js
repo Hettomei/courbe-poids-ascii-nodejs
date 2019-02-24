@@ -1,5 +1,7 @@
 const https = require('https');
 
+const { log } = console;
+
 const url = process.argv.slice(-1)[0];
 
 function drawGraph(data) {
@@ -16,7 +18,7 @@ function drawGraph(data) {
 
   graphic.push(`┌${''.padStart(data.length + 6, '─')}┐`);
 
-  for (let i = visualMax; i > visualMin; i--) {
+  for (let i = visualMax; i > visualMin; i -= 1) {
     let line = '';
 
     line += `${i}  `;
@@ -30,10 +32,10 @@ function drawGraph(data) {
 
   graphic.push(`└${''.padStart(data.length + 6, '─')}┘`);
 
-  console.log(graphic.join('\n'));
+  log(graphic.join('\n'));
 
-  console.log('max :', maxValue);
-  console.log('min :', minValue);
+  log('max :', maxValue);
+  log('min :', minValue);
 }
 
 function play(obj) {
@@ -45,7 +47,7 @@ function play(obj) {
     }))
     .sort((a, b) => a.date - b.date);
 
-  console.log();
+  log();
   drawGraph(basicArray.map(c => c.poids));
 }
 
