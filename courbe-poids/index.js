@@ -3,32 +3,37 @@ const https = require("https");
 const url = process.argv.slice(-1)[0]
 
 function drawGraph(data) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
+  const VISUAL_POINT = '+';
+  const EMPTY_POINT = ' ';
 
-  const verticalArray = data.map(val => "+".padStart(val + 1));
+  const maxValue = Math.max(...data);
+  const minValue = Math.min(...data);
+
+  const visualMax = Math.round(maxValue) + 2;
+  const visualMin = Math.round(minValue) - 5;
 
   let graphic = [];
+
   graphic.push('┌' + ''.padStart(data.length + 6, '─') + '┐');
 
-  for (let i = Math.round(max) + 2; i > Math.round(min) - 5; i--) {
-    let bb = '';
+  for (let i = visualMax; i > visualMin; i--) {
+    let line = '';
 
-    bb += i + '  ';
-    verticalArray.forEach(d => {
-      bb += d[i] || ' ';
+    line += i + '  ';
+    data.forEach(d => {
+      line += i === Math.floor(d) ? VISUAL_POINT : EMPTY_POINT;
     })
-    bb += '  ' + i;
+    line += '  ' + i;
 
-    graphic.push(bb);
+    graphic.push(line);
   }
 
   graphic.push('└' + ''.padStart(data.length + 6, '─') + '┘');
 
   console.log(graphic.join('\n'));
 
-  console.log("max :", max);
-  console.log("min :", min);
+  console.log("max :", maxValue);
+  console.log("min :", minValue);
 }
 
 function play(obj) {
