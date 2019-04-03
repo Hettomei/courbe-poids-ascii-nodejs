@@ -1,4 +1,5 @@
 const https = require('https');
+const fs = require('fs');
 
 const { log } = console;
 
@@ -38,17 +39,22 @@ function drawGraph(data) {
   log('min :', minValue);
 }
 
-function play(obj) {
-  const basicArray = obj.lines
+
+async function createGnuFile(obj) {
+  const objj = obj
+    .map(({ date: d, poids: p }) => `${d.getTime() / 3600000} ${p}`)
+    .join('\n');
+  fs.writeFileSync('poids.data', objj, 'utf8');
+}
+
+function toArray(obj) {
+  return obj.lines
     .filter(l => !l.deleted_at)
     .map(l => ({
       date: new Date(l.date),
       poids: +l.price,
     }))
     .sort((a, b) => a.date - b.date);
-
-  log();
-  drawGraph(basicArray.map(c => c.poids));
 }
 
 https.get(url, (res) => {
@@ -61,6 +67,8 @@ https.get(url, (res) => {
   });
 
   res.on('end', () => {
-    play(JSON.parse(body));
+    const result = toArray(JSON.parse(body));
+    drawGraph(result.map(c => c.poids));
+    createGnuFile(result);
   });
 });
