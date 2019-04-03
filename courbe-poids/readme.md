@@ -24,3 +24,12 @@ example of output :
 max : 87.8
 min : 82
 ```
+
+
+# gnuplot
+
+```
+cd gnuplot_sample
+gnuplot sample.conf
+# a new file sample.png exist
+```
